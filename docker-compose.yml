@@ -1,0 +1,28 @@
+# docker-compose.yml
+version: '2'
+
+networks:
+  graf:
+    driver: bridge
+
+services:
+  prometheus:
+    restart: always
+    image: prom/prometheus
+    networks:
+      - graf
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+  grafana:
+    restart: always
+    image: grafana/grafana
+    networks:
+      - graf
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    depends_on:
+      - prometheus
+    ports:
+      - '3000:3000'
